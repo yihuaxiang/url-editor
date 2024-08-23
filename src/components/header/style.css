@@ -1,0 +1,11 @@
+.site-title {
+  text-align: center;
+  font-size: 32px;
+  margin: 32px;
+}
+
+.site-title-text {
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+}

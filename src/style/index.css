@@ -1,0 +1,77 @@
+
+:-moz-focusring {
+  outline: none;
+}
+
+:root {
+  --color-base-text: #444;
+  --color-reversed-text: #fff;
+  --color-base-background: #fafafa;
+  --color-section-background: #fff;
+  --color-reversed-background: #333;
+  --color-action-button-icon: #666;
+  --color-action-button-icon-active: #000;
+  --color-action-button-icon-disabled: #ccc;
+  --color-base-outline: #666;
+  --color-weak-outline: #ccc;
+  --color-focus-outline: #66c;
+  --color-footer-text: #ccc;
+  --color-footer-background: #333;
+  --color-error-text: #900;
+  --color-error-header-text: #fff;
+  --color-error-background: #fcc;
+  --color-error-header-background: #900;
+  --color-notificator-text: #fff;
+  --color-notificator-background: #66c;
+  /* component colors: `lch(40% 60 ((180+360/8) * n % 360))` */
+  --color-component-scheme: rgb(0.56%, 43.23%, 2.06%); /* n=7 */
+  --color-component-userinfo: rgb(69.03%, 11.22%, 38.09%); /* n=0 */
+  --color-component-host: rgb(0%, 40.89%, 49.56%); /* n=1 */
+  --color-component-port: rgb(42.6%, 36.53%, 0%); /* n=2 */
+  --color-component-path: rgb(52.19%, 25.34%, 64.69%); /* n=3 */
+  --color-component-query: rgb(0%, 42.04%, 36.54%); /* n=4 */
+  --color-component-fragment: rgb(63.64%, 23.09%, 9.92%); /* n=5 */
+  --color-component-reserved: rgb(0%, 38.14%, 69.06%); /* n=6 */
+  --color-component-other: rgb(36.95%, 36.95%, 36.95%); /* `lch(40% 0 0)` */
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-base-text: #ccc;
+    --color-reversed-text: #000;
+    --color-base-background: #111;
+    --color-section-background: #000;
+    --color-reversed-background: #ccc;
+    --color-action-button-icon: #ccc;
+    --color-action-button-icon-active: #fff;
+    --color-action-button-icon-disabled: #666;
+    --color-base-outline: #666;
+    --color-weak-outline: #333;
+    --color-error-text: #c66;
+    --color-error-background: #300;
+    --color-error-header-text: #ccc;
+    --color-error-header-background: #600;
+    /* component colors: `lch(50% 60 ((180+360/8) * n % 360))` */
+    --color-component-scheme: rgb(17.79%, 53.42%, 14.46%); /* n=7 */
+    --color-component-userinfo: rgb(80.7%, 24.62%, 47.78%); /* n=0 */
+    --color-component-host: rgb(0%, 51.47%, 62.11%); /* n=1 */
+    --color-component-port: rgb(53.56%, 46.11%, 0%); /* n=2 */
+    --color-component-path: rgb(62.93%, 35.31%, 75.47%); /* n=3 */
+    --color-component-query: rgb(0%, 52.88%, 46.13%); /* n=4 */
+    --color-component-fragment: rgb(75.37%, 33.26%, 18.94%); /* n=5 */
+    --color-component-reserved: rgb(0%, 48.09%, 86.06%); /* n=6 */
+    --color-component-other: rgb(46.63%, 46.63%, 46.63%); /* `lch(50% 0 0)` */
+  }
+}
+
+html {
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI",
+    sans-serif;
+  background: var(--color-base-background);
+  color: var(--color-base-text);
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
