@@ -13,7 +13,7 @@ const Header: FunctionalComponent = () => {
       {/* <Notificator /> オフラインで利用できることを通知する重要性がそんなに高くないので、UI の一等地に配置するほどではない */}
       <h1 class={style["site-title"]} onClick={onClick}>
         <Icon icon="link" size={32} />
-        <span class={style["site-title-text"]}>URL Editor</span>
+        <span class={style["site-title-text"]}>URL 编辑器</span>
       </h1>
     </Fragment>
   );
