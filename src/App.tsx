@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ParsedURL, QueryParam } from './types';
 import { URLParser } from './urlParser';
 import './App.css';
@@ -33,6 +33,21 @@ function App() {
       setInputURL(newURL);
     }
   };
+
+  const autoResizeTextarea = (textarea: HTMLTextAreaElement) => {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  };
+
+  // 当查询参数变化时，自动调整所有textarea的高度
+  useEffect(() => {
+    const textareas = document.querySelectorAll('.param-value');
+    textareas.forEach((textarea) => {
+      if (textarea instanceof HTMLTextAreaElement) {
+        autoResizeTextarea(textarea);
+      }
+    });
+  }, [queryParams]);
 
   const addQueryParam = () => {
     const updatedParams = URLParser.addQueryParam(queryParams);
@@ -269,14 +284,18 @@ function App() {
                     <label htmlFor={`param-value-${param.id}`} className="sr-only">
                       参数值 {index + 1}
                     </label>
-                    <input
+                    <textarea
                       id={`param-value-${param.id}`}
-                      type="text"
                       value={param.value}
-                      onChange={(e) => handleQueryParamChange(param.id, 'value', e.target.value)}
+                      onChange={(e) => {
+                        handleQueryParamChange(param.id, 'value', e.target.value);
+                        autoResizeTextarea(e.target);
+                      }}
                       placeholder="参数值"
                       className="param-value"
                       aria-describedby={`param-value-help-${param.id}`}
+                      rows={1}
+                      style={{ minHeight: '32px', resize: 'none', overflow: 'hidden' }}
                     />
                     <div id={`param-value-help-${param.id}`} className="sr-only">
                       查询参数的值
