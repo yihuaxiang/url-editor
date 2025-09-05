@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ParsedURL, QueryParam } from './types';
 import { URLParser } from './urlParser';
 import './App.css';
