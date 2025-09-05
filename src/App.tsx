@@ -63,6 +63,14 @@ function App() {
     }
   };
 
+  const openURL = () => {
+    if (inputURL && inputURL.trim() !== '') {
+      window.open(inputURL, '_blank', 'noopener,noreferrer');
+    } else {
+      alert('请先输入有效的 URL');
+    }
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -71,155 +79,236 @@ function App() {
       </header>
 
       <main className="app-main">
-        <div className="url-input-section">
+        <section className="url-input-section" aria-labelledby="input-section-title">
+          <h2 id="input-section-title" className="sr-only">URL 输入</h2>
           <div className="input-group">
             <label htmlFor="url-input">URL 输入框：</label>
             <div className="input-with-buttons">
               <input
                 id="url-input"
-                type="text"
+                type="url"
                 value={inputURL}
                 onChange={(e) => handleURLInput(e.target.value)}
                 placeholder="输入或粘贴 URL..."
                 className="url-input"
+                aria-describedby="url-input-help"
               />
-              <button onClick={pasteFromClipboard} className="btn btn-secondary">
+              <div id="url-input-help" className="sr-only">
+                在此输入完整的网址，支持 http、https 等协议
+              </div>
+              <button 
+                onClick={pasteFromClipboard} 
+                className="btn btn-secondary"
+                aria-label="从剪贴板粘贴 URL"
+              >
                 粘贴
               </button>
-              <button onClick={copyToClipboard} className="btn btn-primary">
+              <button 
+                onClick={copyToClipboard} 
+                className="btn btn-primary"
+                aria-label="复制当前 URL 到剪贴板"
+              >
                 复制
               </button>
             </div>
           </div>
-        </div>
+        </section>
 
         {parsedURL && (
           <div className="url-editor">
             {!parsedURL.isValid && (
-              <div className="error-message">
+              <div className="error-message" role="alert" aria-live="polite">
                 <strong>错误：</strong> {parsedURL.error}
               </div>
             )}
 
-            <div className="url-parts">
-              <h3>URL 组成部分</h3>
+            <section className="url-parts" aria-labelledby="url-parts-title">
+              <h2 id="url-parts-title">URL 组成部分</h2>
               
-              <div className="form-grid">
+              <div className="form-grid" role="group" aria-labelledby="url-parts-title">
                 <div className="form-group">
-                  <label>协议 (Protocol)</label>
+                  <label htmlFor="protocol-input">协议 (Protocol)</label>
                   <input
+                    id="protocol-input"
                     type="text"
                     value={parsedURL.parts.protocol}
                     onChange={(e) => handlePartChange('protocol', e.target.value)}
                     placeholder="https:"
+                    aria-describedby="protocol-help"
                   />
+                  <div id="protocol-help" className="sr-only">
+                    网址协议，如 https:、http:、ftp: 等
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label>主机名 (Hostname)</label>
+                  <label htmlFor="hostname-input">主机名 (Hostname)</label>
                   <input
+                    id="hostname-input"
                     type="text"
                     value={parsedURL.parts.hostname}
                     onChange={(e) => handlePartChange('hostname', e.target.value)}
                     placeholder="example.com"
+                    aria-describedby="hostname-help"
                   />
+                  <div id="hostname-help" className="sr-only">
+                    域名或 IP 地址，如 example.com 或 192.168.1.1
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label>端口 (Port)</label>
+                  <label htmlFor="port-input">端口 (Port)</label>
                   <input
+                    id="port-input"
                     type="text"
                     value={parsedURL.parts.port}
                     onChange={(e) => handlePartChange('port', e.target.value)}
                     placeholder="443"
+                    aria-describedby="port-help"
                   />
+                  <div id="port-help" className="sr-only">
+                    端口号，如 80、443、8080 等
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label>路径 (Pathname)</label>
+                  <label htmlFor="pathname-input">路径 (Pathname)</label>
                   <input
+                    id="pathname-input"
                     type="text"
                     value={parsedURL.parts.pathname}
                     onChange={(e) => handlePartChange('pathname', e.target.value)}
                     placeholder="/path/to/resource"
+                    aria-describedby="pathname-help"
                   />
+                  <div id="pathname-help" className="sr-only">
+                    URL 路径部分，如 /api/users 或 /index.html
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label>锚点 (Hash)</label>
+                  <label htmlFor="hash-input">锚点 (Hash)</label>
                   <input
+                    id="hash-input"
                     type="text"
                     value={parsedURL.parts.hash}
                     onChange={(e) => handlePartChange('hash', e.target.value)}
                     placeholder="#section"
+                    aria-describedby="hash-help"
                   />
+                  <div id="hash-help" className="sr-only">
+                    页面锚点，用于定位到页面特定位置
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label>用户名 (Username)</label>
+                  <label htmlFor="username-input">用户名 (Username)</label>
                   <input
+                    id="username-input"
                     type="text"
                     value={parsedURL.parts.username}
                     onChange={(e) => handlePartChange('username', e.target.value)}
                     placeholder="username"
+                    autoComplete="username"
+                    aria-describedby="username-help"
                   />
+                  <div id="username-help" className="sr-only">
+                    HTTP 基本认证的用户名
+                  </div>
                 </div>
 
                 <div className="form-group">
-                  <label>密码 (Password)</label>
+                  <label htmlFor="password-input">密码 (Password)</label>
                   <input
+                    id="password-input"
                     type="password"
                     value={parsedURL.parts.password}
                     onChange={(e) => handlePartChange('password', e.target.value)}
                     placeholder="password"
+                    autoComplete="current-password"
+                    aria-describedby="password-help"
                   />
+                  <div id="password-help" className="sr-only">
+                    HTTP 基本认证的密码
+                  </div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div className="query-params">
+            <section className="query-params" aria-labelledby="query-params-title">
               <div className="query-params-header">
-                <h3>查询参数 (Query Parameters)</h3>
-                <button onClick={addQueryParam} className="btn btn-success">
+                <h2 id="query-params-title">查询参数 (Query Parameters)</h2>
+                <button 
+                  onClick={addQueryParam} 
+                  className="btn btn-success"
+                  aria-label="添加新的查询参数"
+                >
                   添加参数
                 </button>
               </div>
 
-              <div className="query-params-list">
-                {queryParams.map((param) => (
-                  <div key={param.id} className="query-param-item">
+              <div className="query-params-list" role="group" aria-labelledby="query-params-title">
+                {queryParams.map((param, index) => (
+                  <div key={param.id} className="query-param-item" role="group" aria-label={`查询参数 ${index + 1}`}>
+                    <label htmlFor={`param-key-${param.id}`} className="sr-only">
+                      参数名 {index + 1}
+                    </label>
                     <input
+                      id={`param-key-${param.id}`}
                       type="text"
                       value={param.key}
                       onChange={(e) => handleQueryParamChange(param.id, 'key', e.target.value)}
                       placeholder="参数名"
                       className="param-key"
+                      aria-describedby={`param-key-help-${param.id}`}
                     />
-                    <span className="equals">=</span>
+                    <div id={`param-key-help-${param.id}`} className="sr-only">
+                      查询参数的键名
+                    </div>
+                    <span className="equals" aria-hidden="true">=</span>
+                    <label htmlFor={`param-value-${param.id}`} className="sr-only">
+                      参数值 {index + 1}
+                    </label>
                     <input
+                      id={`param-value-${param.id}`}
                       type="text"
                       value={param.value}
                       onChange={(e) => handleQueryParamChange(param.id, 'value', e.target.value)}
                       placeholder="参数值"
                       className="param-value"
+                      aria-describedby={`param-value-help-${param.id}`}
                     />
+                    <div id={`param-value-help-${param.id}`} className="sr-only">
+                      查询参数的值
+                    </div>
                     <button
                       onClick={() => removeQueryParam(param.id)}
                       className="btn btn-danger btn-small"
+                      aria-label={`删除查询参数 ${param.key || '(空)'}`}
                     >
                       删除
                     </button>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
 
-            <div className="result-section">
-              <h3>最终 URL</h3>
-              <div className="result-url">
+            <section className="result-section" aria-labelledby="result-title">
+              <div className="result-header">
+                <h2 id="result-title">最终 URL</h2>
+                <button 
+                  onClick={openURL} 
+                  className="btn btn-primary"
+                  disabled={!inputURL || inputURL.trim() === ''}
+                  aria-label="在新标签页中打开 URL"
+                >
+                  打开
+                </button>
+              </div>
+              <div className="result-url" role="textbox" aria-readonly="true" aria-labelledby="result-title">
                 {inputURL || '请输入 URL'}
               </div>
-            </div>
+            </section>
           </div>
         )}
       </main>
