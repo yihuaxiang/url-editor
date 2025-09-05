@@ -209,7 +209,7 @@ function App() {
                     value={parsedURL.parts.username}
                     onChange={(e) => handlePartChange('username', e.target.value)}
                     placeholder="username"
-                    autoComplete="username"
+                    autoComplete="off"
                     aria-describedby="username-help"
                   />
                   <div id="username-help" className="sr-only">
@@ -221,11 +221,11 @@ function App() {
                   <label htmlFor="password-input">密码 (Password)</label>
                   <input
                     id="password-input"
-                    type="password"
+                    type="text"
                     value={parsedURL.parts.password}
                     onChange={(e) => handlePartChange('password', e.target.value)}
                     placeholder="password"
-                    autoComplete="current-password"
+                    autoComplete="off"
                     aria-describedby="password-help"
                   />
                   <div id="password-help" className="sr-only">
