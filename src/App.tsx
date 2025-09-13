@@ -79,7 +79,7 @@ function App() {
 
   // 处理浏览器前进后退按钮
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
+    const handlePopState = () => {
       // 当用户点击浏览器前进后退按钮时，从URL中恢复状态
       const currentPath = window.location.pathname + window.location.search + window.location.hash;
       if (currentPath && currentPath !== '/') {
