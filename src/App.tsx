@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ParsedURL, QueryParam } from './types';
 import { URLParser } from './urlParser';
 import './App.css';
@@ -8,11 +8,29 @@ function App() {
   const [parsedURL, setParsedURL] = useState<ParsedURL | null>(null);
   const [queryParams, setQueryParams] = useState<QueryParam[]>([]);
 
+  // 同步URL到浏览器地址栏
+  const syncURLToBrowser = useCallback((url: string) => {
+    if (url && url.trim() !== '') {
+      try {
+        // 使用 History API 更新浏览器地址栏，但不刷新页面
+        const newUrl = new URL(url, window.location.origin);
+        const relativePath = newUrl.pathname + newUrl.search + newUrl.hash;
+        window.history.pushState({ url }, '', relativePath);
+      } catch (error) {
+        // 如果URL无效，不更新浏览器地址栏
+        console.warn('无法同步无效的URL到浏览器地址栏:', error);
+      }
+    }
+  }, []);
+
   const handleURLInput = (url: string) => {
     setInputURL(url);
     const parsed = URLParser.parseURL(url);
     setParsedURL(parsed);
     setQueryParams(parsed.queryParams);
+    
+    // 同步URL到浏览器地址栏
+    syncURLToBrowser(url);
   };
 
   const handlePartChange = (field: keyof ParsedURL['parts'], value: string) => {
@@ -21,7 +39,14 @@ function App() {
     const updatedParts = { ...parsedURL.parts, [field]: value };
     const newURL = URLParser.buildURL(updatedParts, queryParams);
     setInputURL(newURL);
-    handleURLInput(newURL);
+    
+    // 更新解析的URL和查询参数
+    const parsed = URLParser.parseURL(newURL);
+    setParsedURL(parsed);
+    setQueryParams(parsed.queryParams);
+    
+    // 同步URL到浏览器地址栏
+    syncURLToBrowser(newURL);
   };
 
   const handleQueryParamChange = (id: string, field: 'key' | 'value', value: string) => {
@@ -31,6 +56,9 @@ function App() {
     if (parsedURL) {
       const newURL = URLParser.buildURL(parsedURL.parts, updatedParams);
       setInputURL(newURL);
+      
+      // 同步URL到浏览器地址栏
+      syncURLToBrowser(newURL);
     }
   };
 
@@ -49,6 +77,33 @@ function App() {
     });
   }, [queryParams]);
 
+  // 处理浏览器前进后退按钮
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      // 当用户点击浏览器前进后退按钮时，从URL中恢复状态
+      const currentPath = window.location.pathname + window.location.search + window.location.hash;
+      if (currentPath && currentPath !== '/') {
+        // 构建完整的URL
+        const fullURL = window.location.origin + currentPath;
+        handleURLInput(fullURL);
+      }
+    };
+
+    // 监听浏览器前进后退事件
+    window.addEventListener('popstate', handlePopState);
+
+    // 组件挂载时，如果URL中有路径信息，尝试解析并设置到编辑器中
+    const currentPath = window.location.pathname + window.location.search + window.location.hash;
+    if (currentPath && currentPath !== '/') {
+      const fullURL = window.location.origin + currentPath;
+      handleURLInput(fullURL);
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const addQueryParam = () => {
     const updatedParams = URLParser.addQueryParam(queryParams);
     setQueryParams(updatedParams);
@@ -61,6 +116,9 @@ function App() {
     if (parsedURL) {
       const newURL = URLParser.buildURL(parsedURL.parts, updatedParams);
       setInputURL(newURL);
+      
+      // 同步URL到浏览器地址栏
+      syncURLToBrowser(newURL);
     }
   };
 

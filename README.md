@@ -76,3 +76,8 @@ src/
 ## 许可证
 
 MIT License
+
+
+## 开发注意
+
+node 18
