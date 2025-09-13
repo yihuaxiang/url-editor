@@ -8,6 +8,25 @@ function App() {
   const [parsedURL, setParsedURL] = useState<ParsedURL | null>(null);
   const [queryParams, setQueryParams] = useState<QueryParam[]>([]);
 
+  // 页面加载时从浏览器地址栏恢复URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const savedURL = urlParams.get('u');
+    if (savedURL) {
+      handleURLInput(savedURL);
+    }
+  }, []);
+
+  // URL变化时同步到浏览器地址栏
+  useEffect(() => {
+    if (inputURL) {
+      const currentParams = new URLSearchParams(window.location.search);
+      currentParams.set('u', inputURL);
+      const newURL = `${window.location.pathname}?${currentParams.toString()}`;
+      window.history.replaceState({}, '', newURL);
+    }
+  }, [inputURL]);
+
   const handleURLInput = (url: string) => {
     setInputURL(url);
     const parsed = URLParser.parseURL(url);
@@ -336,3 +355,4 @@ function App() {
 }
 
 export default App;
+
