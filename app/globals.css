@@ -18,6 +18,8 @@ body {
 .app {
   min-height: 100vh;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header {
@@ -38,8 +40,35 @@ body {
 }
 
 .app-main {
+  flex: 1;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+}
+
+.app-footer {
+  flex-shrink: 0;
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding: 20px 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.footer-label {
+  margin-right: 6px;
+}
+
+.footer-link {
+  color: #99f6e4;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #5eead4;
+  text-decoration: underline;
 }
 
 .url-input-section {

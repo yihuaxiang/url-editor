@@ -54,6 +54,17 @@ function UrlEditorFallback() {
           </div>
         </section>
       </main>
+      <footer className="app-footer">
+        <span className="footer-label">友情链接：</span>
+        <a
+          href="https://imgbed.cn/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-link"
+        >
+          图床小镇
+        </a>
+      </footer>
     </div>
   );
 }
