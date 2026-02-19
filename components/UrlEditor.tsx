@@ -1,52 +1,65 @@
-import { useState, useEffect } from 'react';
-import { ParsedURL, QueryParam } from './types';
-import { URLParser } from './urlParser';
-import './App.css';
+'use client';
 
-function App() {
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ParsedURL, QueryParam } from '@/lib/types';
+import { URLParser } from '@/lib/urlParser';
+
+interface UrlEditorProps {
+  initialUrl?: string | null;
+}
+
+export default function UrlEditor({ initialUrl }: UrlEditorProps) {
+  const searchParams = useSearchParams();
   const [inputURL, setInputURL] = useState('');
   const [parsedURL, setParsedURL] = useState<ParsedURL | null>(null);
   const [queryParams, setQueryParams] = useState<QueryParam[]>([]);
 
-  // 页面加载时从浏览器地址栏恢复URL
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const savedURL = urlParams.get('u');
-    if (savedURL) {
-      handleURLInput(savedURL);
-    }
-  }, []);
-
-  // URL变化时同步到浏览器地址栏
-  useEffect(() => {
-    if (inputURL) {
-      const currentParams = new URLSearchParams(window.location.search);
-      currentParams.set('u', inputURL);
-      const newURL = `${window.location.pathname}?${currentParams.toString()}`;
-      window.history.replaceState({}, '', newURL);
-    }
-  }, [inputURL]);
-
-  const handleURLInput = (url: string) => {
+  const handleURLInput = useCallback((url: string) => {
     setInputURL(url);
     const parsed = URLParser.parseURL(url);
     setParsedURL(parsed);
     setQueryParams(parsed.queryParams);
-  };
+  }, []);
+
+  // 从 SSR 传入的 initialUrl 或 URL 参数恢复
+  useEffect(() => {
+    const urlFromParam = searchParams.get('u') ?? initialUrl;
+    if (urlFromParam) {
+      handleURLInput(urlFromParam);
+    }
+  }, [initialUrl, handleURLInput, searchParams]);
+
+  // URL 变化时同步到地址栏
+  useEffect(() => {
+    if (inputURL) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('u', inputURL);
+      const newPath = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState({}, '', newPath);
+    }
+  }, [inputURL, searchParams]);
 
   const handlePartChange = (field: keyof ParsedURL['parts'], value: string) => {
     if (!parsedURL) return;
-    
     const updatedParts = { ...parsedURL.parts, [field]: value };
     const newURL = URLParser.buildURL(updatedParts, queryParams);
     setInputURL(newURL);
     handleURLInput(newURL);
   };
 
-  const handleQueryParamChange = (id: string, field: 'key' | 'value', value: string) => {
-    const updatedParams = URLParser.updateQueryParam(queryParams, id, field, value);
+  const handleQueryParamChange = (
+    id: string,
+    field: 'key' | 'value',
+    value: string
+  ) => {
+    const updatedParams = URLParser.updateQueryParam(
+      queryParams,
+      id,
+      field,
+      value
+    );
     setQueryParams(updatedParams);
-    
     if (parsedURL) {
       const newURL = URLParser.buildURL(parsedURL.parts, updatedParams);
       setInputURL(newURL);
@@ -58,7 +71,6 @@ function App() {
     textarea.style.height = textarea.scrollHeight + 'px';
   };
 
-  // 当查询参数变化时，自动调整所有textarea的高度
   useEffect(() => {
     const textareas = document.querySelectorAll('.param-value');
     textareas.forEach((textarea) => {
@@ -69,14 +81,12 @@ function App() {
   }, [queryParams]);
 
   const addQueryParam = () => {
-    const updatedParams = URLParser.addQueryParam(queryParams);
-    setQueryParams(updatedParams);
+    setQueryParams(URLParser.addQueryParam(queryParams));
   };
 
   const removeQueryParam = (id: string) => {
     const updatedParams = URLParser.removeQueryParam(queryParams, id);
     setQueryParams(updatedParams);
-    
     if (parsedURL) {
       const newURL = URLParser.buildURL(parsedURL.parts, updatedParams);
       setInputURL(newURL);
@@ -92,7 +102,7 @@ function App() {
     try {
       const text = await navigator.clipboard.readText();
       handleURLInput(text);
-    } catch (err) {
+    } catch {
       alert('无法读取剪贴板内容');
     }
   };
@@ -113,8 +123,13 @@ function App() {
       </header>
 
       <main className="app-main">
-        <section className="url-input-section" aria-labelledby="input-section-title">
-          <h2 id="input-section-title" className="sr-only">URL 输入</h2>
+        <section
+          className="url-input-section"
+          aria-labelledby="input-section-title"
+        >
+          <h2 id="input-section-title" className="sr-only">
+            URL 输入
+          </h2>
           <div className="input-group">
             <label htmlFor="url-input">URL 输入框：</label>
             <div className="input-with-buttons">
@@ -130,15 +145,15 @@ function App() {
               <div id="url-input-help" className="sr-only">
                 在此输入完整的网址，支持 http、https 等协议
               </div>
-              <button 
-                onClick={pasteFromClipboard} 
+              <button
+                onClick={pasteFromClipboard}
                 className="btn btn-secondary"
                 aria-label="从剪贴板粘贴 URL"
               >
                 粘贴
               </button>
-              <button 
-                onClick={copyToClipboard} 
+              <button
+                onClick={copyToClipboard}
                 className="btn btn-primary"
                 aria-label="复制当前 URL 到剪贴板"
               >
@@ -158,15 +173,21 @@ function App() {
 
             <section className="url-parts" aria-labelledby="url-parts-title">
               <h2 id="url-parts-title">URL 组成部分</h2>
-              
-              <div className="form-grid" role="group" aria-labelledby="url-parts-title">
+
+              <div
+                className="form-grid"
+                role="group"
+                aria-labelledby="url-parts-title"
+              >
                 <div className="form-group">
                   <label htmlFor="protocol-input">协议 (Protocol)</label>
                   <input
                     id="protocol-input"
                     type="text"
                     value={parsedURL.parts.protocol}
-                    onChange={(e) => handlePartChange('protocol', e.target.value)}
+                    onChange={(e) =>
+                      handlePartChange('protocol', e.target.value)
+                    }
                     placeholder="https:"
                     aria-describedby="protocol-help"
                   />
@@ -181,7 +202,9 @@ function App() {
                     id="hostname-input"
                     type="text"
                     value={parsedURL.parts.hostname}
-                    onChange={(e) => handlePartChange('hostname', e.target.value)}
+                    onChange={(e) =>
+                      handlePartChange('hostname', e.target.value)
+                    }
                     placeholder="example.com"
                     aria-describedby="hostname-help"
                   />
@@ -211,7 +234,9 @@ function App() {
                     id="pathname-input"
                     type="text"
                     value={parsedURL.parts.pathname}
-                    onChange={(e) => handlePartChange('pathname', e.target.value)}
+                    onChange={(e) =>
+                      handlePartChange('pathname', e.target.value)
+                    }
                     placeholder="/path/to/resource"
                     aria-describedby="pathname-help"
                   />
@@ -241,7 +266,9 @@ function App() {
                     id="username-input"
                     type="text"
                     value={parsedURL.parts.username}
-                    onChange={(e) => handlePartChange('username', e.target.value)}
+                    onChange={(e) =>
+                      handlePartChange('username', e.target.value)
+                    }
                     placeholder="username"
                     autoComplete="off"
                     aria-describedby="username-help"
@@ -257,7 +284,9 @@ function App() {
                     id="password-input"
                     type="text"
                     value={parsedURL.parts.password}
-                    onChange={(e) => handlePartChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handlePartChange('password', e.target.value)
+                    }
                     placeholder="password"
                     autoComplete="off"
                     aria-describedby="password-help"
@@ -269,11 +298,14 @@ function App() {
               </div>
             </section>
 
-            <section className="query-params" aria-labelledby="query-params-title">
+            <section
+              className="query-params"
+              aria-labelledby="query-params-title"
+            >
               <div className="query-params-header">
                 <h2 id="query-params-title">查询参数 (Query Parameters)</h2>
-                <button 
-                  onClick={addQueryParam} 
+                <button
+                  onClick={addQueryParam}
                   className="btn btn-success"
                   aria-label="添加新的查询参数"
                 >
@@ -281,42 +313,75 @@ function App() {
                 </button>
               </div>
 
-              <div className="query-params-list" role="group" aria-labelledby="query-params-title">
+              <div
+                className="query-params-list"
+                role="group"
+                aria-labelledby="query-params-title"
+              >
                 {queryParams.map((param, index) => (
-                  <div key={param.id} className="query-param-item" role="group" aria-label={`查询参数 ${index + 1}`}>
-                    <label htmlFor={`param-key-${param.id}`} className="sr-only">
+                  <div
+                    key={param.id}
+                    className="query-param-item"
+                    role="group"
+                    aria-label={`查询参数 ${index + 1}`}
+                  >
+                    <label
+                      htmlFor={`param-key-${param.id}`}
+                      className="sr-only"
+                    >
                       参数名 {index + 1}
                     </label>
                     <input
                       id={`param-key-${param.id}`}
                       type="text"
                       value={param.key}
-                      onChange={(e) => handleQueryParamChange(param.id, 'key', e.target.value)}
+                      onChange={(e) =>
+                        handleQueryParamChange(param.id, 'key', e.target.value)
+                      }
                       placeholder="参数名"
                       className="param-key"
                       aria-describedby={`param-key-help-${param.id}`}
                     />
-                    <div id={`param-key-help-${param.id}`} className="sr-only">
+                    <div
+                      id={`param-key-help-${param.id}`}
+                      className="sr-only"
+                    >
                       查询参数的键名
                     </div>
-                    <span className="equals" aria-hidden="true">=</span>
-                    <label htmlFor={`param-value-${param.id}`} className="sr-only">
+                    <span className="equals" aria-hidden="true">
+                      =
+                    </span>
+                    <label
+                      htmlFor={`param-value-${param.id}`}
+                      className="sr-only"
+                    >
                       参数值 {index + 1}
                     </label>
                     <textarea
                       id={`param-value-${param.id}`}
                       value={param.value}
                       onChange={(e) => {
-                        handleQueryParamChange(param.id, 'value', e.target.value);
+                        handleQueryParamChange(
+                          param.id,
+                          'value',
+                          e.target.value
+                        );
                         autoResizeTextarea(e.target);
                       }}
                       placeholder="参数值"
                       className="param-value"
                       aria-describedby={`param-value-help-${param.id}`}
                       rows={1}
-                      style={{ minHeight: '32px', resize: 'none', overflow: 'hidden' }}
+                      style={{
+                        minHeight: '32px',
+                        resize: 'none',
+                        overflow: 'hidden',
+                      }}
                     />
-                    <div id={`param-value-help-${param.id}`} className="sr-only">
+                    <div
+                      id={`param-value-help-${param.id}`}
+                      className="sr-only"
+                    >
                       查询参数的值
                     </div>
                     <button
@@ -334,8 +399,8 @@ function App() {
             <section className="result-section" aria-labelledby="result-title">
               <div className="result-header">
                 <h2 id="result-title">最终 URL</h2>
-                <button 
-                  onClick={openURL} 
+                <button
+                  onClick={openURL}
                   className="btn btn-primary"
                   disabled={!inputURL || inputURL.trim() === ''}
                   aria-label="在新标签页中打开 URL"
@@ -343,7 +408,12 @@ function App() {
                   打开
                 </button>
               </div>
-              <div className="result-url" role="textbox" aria-readonly="true" aria-labelledby="result-title">
+              <div
+                className="result-url"
+                role="textbox"
+                aria-readonly
+                aria-labelledby="result-title"
+              >
                 {inputURL || '请输入 URL'}
               </div>
             </section>
@@ -353,6 +423,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
-
