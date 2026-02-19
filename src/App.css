@@ -62,8 +62,8 @@
 
 .url-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 .btn {
@@ -78,12 +78,12 @@
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #0d9488;
   color: white;
 }
 
 .btn-primary:hover {
-  background: #5a6fd8;
+  background: #0f766e;
   transform: translateY(-1px);
 }
 
@@ -146,7 +146,7 @@
   color: #333;
   margin-bottom: 20px;
   font-size: 1.3rem;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid #0d9488;
   padding-bottom: 10px;
 }
 
@@ -178,8 +178,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 .query-params {
@@ -196,7 +196,7 @@
 .query-params-header h3 {
   color: #333;
   font-size: 1.3rem;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid #0d9488;
   padding-bottom: 10px;
   margin: 0;
 }
@@ -244,8 +244,8 @@
 .param-key:focus,
 .param-value:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 .result-section {
@@ -377,7 +377,7 @@
 /* Focus improvements for accessibility */
 input:focus,
 button:focus {
-  outline: 2px solid #2563eb;
+  outline: 2px solid #0d9488;
   outline-offset: 2px;
 }
 
