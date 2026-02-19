@@ -7,13 +7,21 @@ import { URLParser } from '@/lib/urlParser';
 
 interface UrlEditorProps {
   initialUrl?: string | null;
+  initialParsedURL?: ParsedURL | null;
+  initialQueryParams?: QueryParam[];
 }
 
-export default function UrlEditor({ initialUrl }: UrlEditorProps) {
+export default function UrlEditor({
+  initialUrl,
+  initialParsedURL = null,
+  initialQueryParams = [],
+}: UrlEditorProps) {
   const searchParams = useSearchParams();
-  const [inputURL, setInputURL] = useState('');
-  const [parsedURL, setParsedURL] = useState<ParsedURL | null>(null);
-  const [queryParams, setQueryParams] = useState<QueryParam[]>([]);
+  const [inputURL, setInputURL] = useState(initialUrl ?? '');
+  const [parsedURL, setParsedURL] = useState<ParsedURL | null>(initialParsedURL);
+  const [queryParams, setQueryParams] = useState<QueryParam[]>(
+    initialQueryParams
+  );
 
   const handleURLInput = useCallback((url: string) => {
     setInputURL(url);
@@ -22,13 +30,13 @@ export default function UrlEditor({ initialUrl }: UrlEditorProps) {
     setQueryParams(parsed.queryParams);
   }, []);
 
-  // 从 SSR 传入的 initialUrl 或 URL 参数恢复
+  // 仅当 URL 栏参数变化时（如客户端导航）更新，避免覆盖 SSR 初始状态
   useEffect(() => {
     const urlFromParam = searchParams.get('u') ?? initialUrl;
-    if (urlFromParam) {
+    if (urlFromParam && urlFromParam !== inputURL) {
       handleURLInput(urlFromParam);
     }
-  }, [initialUrl, handleURLInput, searchParams]);
+  }, [initialUrl, inputURL, handleURLInput, searchParams]);
 
   // URL 变化时同步到地址栏
   useEffect(() => {

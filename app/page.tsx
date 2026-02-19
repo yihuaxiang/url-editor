@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import UrlEditor from '@/components/UrlEditor';
+import { URLParser } from '@/lib/urlParser';
 
 interface PageProps {
   searchParams: Promise<{ u?: string }>;
@@ -9,9 +10,16 @@ export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
   const initialUrl = params.u ?? null;
 
+  // 服务端解析 URL，用于 SSR 预渲染完整内容
+  const initialParsed = initialUrl ? URLParser.parseURL(initialUrl) : null;
+
   return (
     <Suspense fallback={<UrlEditorFallback />}>
-      <UrlEditor initialUrl={initialUrl} />
+      <UrlEditor
+        initialUrl={initialUrl}
+        initialParsedURL={initialParsed}
+        initialQueryParams={initialParsed?.queryParams ?? []}
+      />
     </Suspense>
   );
 }
