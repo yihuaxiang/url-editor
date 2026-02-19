@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { ParsedURL, QueryParam } from '@/lib/types';
 import { URLParser } from '@/lib/urlParser';
 
@@ -16,7 +16,10 @@ export default function UrlEditor({
   initialParsedURL = null,
   initialQueryParams = [],
 }: UrlEditorProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isSyncingToUrl = useRef(false);
   const [inputURL, setInputURL] = useState(initialUrl ?? '');
   const [parsedURL, setParsedURL] = useState<ParsedURL | null>(initialParsedURL);
   const [queryParams, setQueryParams] = useState<QueryParam[]>(
@@ -30,23 +33,27 @@ export default function UrlEditor({
     setQueryParams(parsed.queryParams);
   }, []);
 
-  // 仅当 URL 栏参数变化时（如客户端导航）更新，避免覆盖 SSR 初始状态
+  // 先同步到地址栏（顺序重要：必须在「从 URL 读取」之前执行，避免用户输入被覆盖）
   useEffect(() => {
-    const urlFromParam = searchParams.get('u') ?? initialUrl;
+    if (inputURL) {
+      isSyncingToUrl.current = true;
+      const params = new URLSearchParams();
+      params.set('u', inputURL);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [inputURL, pathname, router]);
+
+  // 仅当 URL 栏参数变化时（如客户端导航、浏览器前进后退）更新
+  useEffect(() => {
+    if (isSyncingToUrl.current) {
+      isSyncingToUrl.current = false;
+      return;
+    }
+    const urlFromParam = searchParams.get('u') ?? initialUrl ?? '';
     if (urlFromParam && urlFromParam !== inputURL) {
       handleURLInput(urlFromParam);
     }
   }, [initialUrl, inputURL, handleURLInput, searchParams]);
-
-  // URL 变化时同步到地址栏
-  useEffect(() => {
-    if (inputURL) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('u', inputURL);
-      const newPath = `${window.location.pathname}?${params.toString()}`;
-      window.history.replaceState({}, '', newPath);
-    }
-  }, [inputURL, searchParams]);
 
   const handlePartChange = (field: keyof ParsedURL['parts'], value: string) => {
     if (!parsedURL) return;
