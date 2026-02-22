@@ -39,6 +39,43 @@ body {
   opacity: 0.9;
 }
 
+.header-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #5eead4;
+  text-decoration: underline;
+}
+
+.nav-link-active {
+  color: #99f6e4;
+  font-weight: 600;
+  cursor: default;
+  text-decoration: none;
+}
+
+.nav-link-active:hover {
+  color: #99f6e4;
+  text-decoration: none;
+}
+
+.nav-sep {
+  color: rgba(255, 255, 255, 0.5);
+  user-select: none;
+}
+
 .app-main {
   flex: 1;
   max-width: 1200px;
@@ -340,6 +377,50 @@ body {
   }
 }
 
+/* 介绍页样式 */
+.intro-article {
+  background: white;
+  border-radius: 12px;
+  padding: 30px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.intro-article section {
+  margin-bottom: 28px;
+}
+
+.intro-article section:last-of-type {
+  margin-bottom: 0;
+}
+
+.intro-article h2 {
+  color: #333;
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #0d9488;
+  padding-bottom: 10px;
+}
+
+.intro-article p {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+.intro-cta {
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.intro-cta-btn {
+  display: inline-block;
+  margin-top: 16px;
+  text-decoration: none;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .app {
@@ -381,6 +462,10 @@ body {
     flex-direction: column;
     gap: 10px;
     align-items: stretch;
+  }
+
+  .intro-article {
+    padding: 20px;
   }
 }
 

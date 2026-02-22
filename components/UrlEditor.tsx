@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { ParsedURL, QueryParam } from '@/lib/types';
 import { URLParser } from '@/lib/urlParser';
@@ -133,6 +134,15 @@ export default function UrlEditor({
   return (
     <div className="app">
       <header className="app-header">
+        <nav className="header-nav" aria-label="主导航">
+          <span className="nav-link nav-link-active">首页</span>
+          <span className="nav-sep" aria-hidden="true">
+            |
+          </span>
+          <Link href="/about" className="nav-link">
+            关于
+          </Link>
+        </nav>
         <h1>URL 编辑器</h1>
         <p>粘贴或输入 URL，然后编辑其各个部分和参数</p>
       </header>
