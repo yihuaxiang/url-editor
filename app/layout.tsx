@@ -1,29 +1,15 @@
 import type { Metadata, Viewport } from 'next';
-import { IBM_Plex_Mono, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  weight: ['400', '500'],
-  display: 'swap',
-});
-
 export const viewport: Viewport = {
-  themeColor: '#f3ede3',
+  themeColor: '#0d9488',
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://urleditor.cn'),
-  title: 'URL 编辑器 - 在线解析、编辑并重组 URL',
+  title: 'URL 编辑器 - 在线 URL 解析编辑工具 | 免费网址参数编辑器',
   description:
-    '一个把 URL 解析、字段编辑、参数管理和结果复制集中到同一页面的在线工具。',
+    '免费在线 URL 编辑器，支持解析、编辑网址的协议、域名、端口、路径、查询参数等。可视化编辑URL各个组成部分，支持批量管理查询参数，一键复制粘贴。',
   keywords:
     'URL编辑器,网址编辑,URL解析,查询参数编辑,URL构建器,在线URL工具,网址解析器,免费URL工具',
   authors: [{ name: 'URL Editor' }],
@@ -31,18 +17,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: 'https://urleditor.cn/',
-    title: 'URL 编辑器 - 在线解析、编辑并重组 URL',
+    title: 'URL 编辑器 - 在线 URL 解析编辑工具',
     description:
-      '一个把 URL 解析、字段编辑、参数管理和结果复制集中到同一页面的在线工具。',
+      '免费在线 URL 编辑器，支持解析、编辑网址的协议、域名、端口、路径、查询参数等。可视化编辑URL各个组成部分。',
     images: ['/og-image.png'],
     siteName: 'URL 编辑器',
     locale: 'zh_CN',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'URL 编辑器 - 在线解析、编辑并重组 URL',
+    title: 'URL 编辑器 - 在线 URL 解析编辑工具',
     description:
-      '一个把 URL 解析、字段编辑、参数管理和结果复制集中到同一页面的在线工具。',
+      '免费在线 URL 编辑器，支持解析、编辑网址的协议、域名、端口、路径、查询参数等。',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -55,7 +41,7 @@ const jsonLd = {
   '@type': 'WebApplication',
   name: 'URL 编辑器',
   description:
-    '一个把 URL 解析、字段编辑、参数管理和结果复制集中到同一页面的在线工具',
+    '免费在线 URL 编辑器，支持解析、编辑网址的协议、域名、端口、路径、查询参数等',
   url: 'https://urleditor.cn/',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Web',
@@ -82,7 +68,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
-      <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
+      <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

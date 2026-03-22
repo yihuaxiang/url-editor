@@ -2,26 +2,26 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: '关于 - URL 编辑器 | 面向日常改链路的在线 URL 工具',
+  title: '关于 - URL 编辑器 | 告别 URL 手动改参烦恼，在线网址解析编辑工具',
   description:
-    'URL 编辑器提供清晰的 URL 解析、参数编辑和结果复制体验，适合开发、运营和日常协作中的改链接场景。',
+    'urleditor.cn 专业在线 URL 解析编辑工具，零门槛、全兼容、高效率。支持 http/https，可视化编辑参数，解决开发者、运营者、办公族的 URL 编辑难题，免费无限制。',
   keywords:
-    'URL编辑器,网址编辑,URL解析,在线URL工具,参数编辑,免费工具,改链接',
+    'URL编辑器,网址编辑,urleditor,在线URL工具,URL解析,参数编辑,免费工具,高效办公',
   openGraph: {
     type: 'website',
     url: 'https://urleditor.cn/about',
-    title: '关于 - URL 编辑器',
+    title: '关于 - URL 编辑器 | 告别 URL 手动改参烦恼',
     description:
-      '一个把 URL 拆解、编辑和复制流程集中到同一页面的在线工具。',
+      'urleditor.cn 专业在线 URL 解析编辑工具，零门槛、全兼容、高效率，解决开发者、运营者、办公族的 URL 编辑难题。',
     images: ['/og-image.png'],
     siteName: 'URL 编辑器',
     locale: 'zh_CN',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '关于 - URL 编辑器',
+    title: '关于 - URL 编辑器 | 告别 URL 手动改参烦恼',
     description:
-      '一个把 URL 拆解、编辑和复制流程集中到同一页面的在线工具。',
+      'urleditor.cn 专业在线 URL 解析编辑工具，零门槛、全兼容、高效率。',
     images: ['/og-image.png'],
   },
   alternates: {
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
 const aboutJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: '关于 URL 编辑器',
+  name: '关于 URL 编辑器 - 在线网址解析编辑工具',
   description:
-    '一个把 URL 拆解、编辑和复制流程集中到同一页面的在线工具。',
+    'urleditor.cn 专业在线 URL 解析编辑工具，零门槛、全兼容、高效率，解决开发者、运营者、办公族的 URL 编辑难题。',
   url: 'https://urleditor.cn/about',
   isPartOf: {
     '@type': 'WebSite',
@@ -43,29 +43,6 @@ const aboutJsonLd = {
     name: 'URL 编辑器',
   },
 };
-
-const aboutSections = [
-  {
-    title: '为什么做这个工具',
-    body:
-      '很多改链接场景并不复杂，但手动改 query、端口、路径和锚点时很容易出错。这个工具的目标不是“展示很多功能”，而是把高频操作放在一个清楚、顺手的界面里。',
-  },
-  {
-    title: '适合谁使用',
-    body:
-      '开发者可以快速调试接口地址，运营可以稳定改活动参数，内容和商务同学也能在不碰代码的情况下整理分享链接。',
-  },
-  {
-    title: '核心体验',
-    body:
-      '输入 URL 后立即解析，字段和参数分区展示，最终结果实时回写。复制、粘贴和打开链接都保持在同一个工作流里，不需要反复切换工具。',
-  },
-  {
-    title: '设计原则',
-    body:
-      '界面保持克制，优先让输入和结果清晰可读；视觉上有足够的层级，但不会为了装饰牺牲操作效率。',
-  },
-];
 
 export default function AboutPage() {
   return (
@@ -76,58 +53,78 @@ export default function AboutPage() {
           __html: JSON.stringify(aboutJsonLd).replace(/</g, '\\u003c'),
         }}
       />
-
       <header className="app-header">
-        <div className="header-topbar">
-          <Link href="/" className="brand-mark">
-            URL Editor
+        <nav className="header-nav" aria-label="主导航">
+          <Link href="/" className="nav-link">
+            首页
           </Link>
-          <nav className="header-nav" aria-label="主导航">
-            <Link href="/" className="nav-link">
-              首页
-            </Link>
-            <span className="nav-link nav-link-active">关于</span>
-          </nav>
-        </div>
-
-        <div className="hero hero-compact hero-single-line">
-          <div className="hero-copy">
-            <span className="hero-kicker">About the product</span>
-            <h1>为改链接场景做的在线工具</h1>
-            <p>
-              URL Editor 专注一件事：让 URL 的解析、编辑和输出都足够清楚。
-            </p>
-          </div>
-        </div>
+          <span className="nav-sep" aria-hidden="true">
+            |
+          </span>
+          <span className="nav-link nav-link-active">关于</span>
+        </nav>
+        <h1>告别 URL 手动改参烦恼！</h1>
+        <p>urleditor.cn 让网址编辑高效又省心</p>
       </header>
 
       <main className="app-main">
-        <section className="about-grid" aria-label="产品说明">
-          {aboutSections.map((section) => (
-            <article key={section.title} className="surface about-card">
-              <span className="panel-eyebrow">About</span>
-              <h2>{section.title}</h2>
-              <p>{section.body}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className="surface about-cta">
-          <div>
-            <span className="panel-eyebrow">Ready to edit</span>
-            <h2>直接回到首页开始处理 URL。</h2>
+        <article className="intro-article">
+          <section>
             <p>
-              复制一条链接进来，就能立即拆开查看、逐项修改并生成最终结果。
+              还在为手动修改 URL 参数反复核对、频繁出错而头疼？还在因不懂编码规则，导致链接跳转失败、推广链路断裂而焦虑？一款免费又实用的在线工具 ——
+              urleditor.cn 来了！作为专业的在线 URL 解析编辑工具，它以极简操作、强大兼容，轻松解决开发者、运营者、办公族的 URL 编辑难题，让网址参数调整、链接解析变得简单高效，成为职场高效办公的实用利器。
             </p>
-          </div>
-          <Link href="/" className="btn btn-primary">
-            返回首页
-          </Link>
-        </section>
+          </section>
+
+          <section>
+            <h2>URL 编辑的常见痛点</h2>
+            <p>
+              在日常工作中，URL 编辑是高频需求，却藏着诸多痛点：开发者调试接口时，手动拼接参数容易遗漏、编码出错，反复校验耗时耗力；运营人员生成活动推广链接，修改 UTM 参数、调整跳转路径时，因格式问题导致链接失效，影响营销转化；普通办公族分享链接时，面对冗长复杂的参数串，想精简优化却无从下手。而传统的 URL 编辑方式，要么需要专业的代码知识，要么依赖繁琐的本地软件，门槛高、操作繁，让很多人望而却步。
+            </p>
+          </section>
+
+          <section>
+            <h2>零门槛、全兼容、高效率</h2>
+            <p>
+              urleditor.cn 的出现，彻底打破了这些限制，以「零门槛、全兼容、高效率」的核心优势，重新定义 URL 编辑体验。它无需下载安装，打开网页即可使用，无需任何专业技术背景，无论是新手还是老手，都能快速上手。在核心功能上，工具支持直接粘贴或输入完整网址，可对 URL 的各个组成部分、各类参数进行可视化编辑，增删改查一步到位，告别手动敲代码的繁琐，从根源上减少出错概率，让每一次编辑都精准高效。
+            </p>
+          </section>
+
+          <section>
+            <h2>完美兼容常见协议</h2>
+            <p>
+              兼容性上，urleditor.cn 完美支持 http、https 等常见网络协议，覆盖日常办公、开发调试、营销推广等绝大多数使用场景，无论是普通的网页链接、活动推广链接，还是开发用的接口链接，都能轻松解析、灵活编辑，无需担心协议不兼容导致的解析失败问题。简洁的界面设计让操作路径一目了然，没有多余的功能按钮，输入、编辑、复制三步即可完成整个 URL 处理流程，极大提升工作效率，让原本需要几分钟的操作，几十秒就能搞定。
+            </p>
+          </section>
+
+          <section>
+            <h2>纯免费，无隐藏收费</h2>
+            <p>
+              作为一款纯免费的工具，urleditor.cn 没有隐藏收费项目，没有会员限制，所有核心功能全部开放，个人用户、企业用户均可无门槛使用，兼顾实用性与性价比。同时，页面搭配贴心的友情链接板块，联动优质工具平台，为用户提供更多办公辅助选择，打造一站式的高效办公体验。
+            </p>
+          </section>
+
+          <section>
+            <h2>适用人群广泛</h2>
+            <p>
+              从开发者日常接口调试、前端联调，到运营人员批量生成推广链接、调整营销参数，再到普通用户精简分享链接、优化网址结构，urleditor.cn 都能精准适配。它不仅是一款 URL 编辑工具，更是提升工作效率的「小帮手」，用极简的操作解决实际工作中的真实痛点，让每一个人都能轻松驾驭 URL 编辑。
+            </p>
+          </section>
+
+          <section className="intro-cta">
+            <h2>立即体验</h2>
+            <p>
+              如果你还在被 URL 编辑的各种问题困扰，不妨打开 urleditor.cn，体验一站式的网址解析编辑服务，告别手动改参的烦恼，让高效办公触手可及！
+            </p>
+            <Link href="/" className="btn btn-primary intro-cta-btn">
+              开始使用 URL 编辑器
+            </Link>
+          </section>
+        </article>
       </main>
 
       <footer className="app-footer">
-        <span className="footer-label">友情链接</span>
+        <span className="footer-label">友情链接：</span>
         <a
           href="https://imgbed.cn/"
           target="_blank"
